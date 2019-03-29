@@ -1,19 +1,28 @@
 package com.pinyougou.pojo;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * 品牌实体类
  */
+@Table(name = "tb_brand")
 public class Brand implements Serializable{
+    private static final long serialVersionUID = -8315881228799842049L;
     //品牌id
+    //主键ID
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     ///品牌名字
+    @Column(name = "name")
     private String name;
     //品牌首字母
+    @Column(name = "first_char")
     private String firstChar;
 
-    public long getId() {
+
+    public Long getId() {
         return id;
     }
 
@@ -26,7 +35,7 @@ public class Brand implements Serializable{
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.trim();
     }
 
     public String getFirstChar() {
@@ -34,6 +43,6 @@ public class Brand implements Serializable{
     }
 
     public void setFirstChar(String firstChar) {
-        this.firstChar = firstChar;
+        this.firstChar = firstChar == null ? null : firstChar.trim();
     }
 }
