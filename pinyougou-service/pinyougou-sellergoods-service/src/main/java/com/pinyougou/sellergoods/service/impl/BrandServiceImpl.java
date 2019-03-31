@@ -10,6 +10,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import pojo.PageResult;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -55,15 +56,16 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	/** 批量删除 */
+	@Override
 	public void deleteAll(Serializable[] ids){
 		try {
 			// 创建示范对象
-			Example example = new Example(Brand.class);
+			Example example=new Example(Brand.class);
 			// 创建条件对象
-			Example.Criteria criteria = example.createCriteria();
+			Example.Criteria criteria=example.createCriteria();
 			// 创建In条件
-			criteria.andIn("id", Arrays.asList(ids));
-			// 根据示范对象删除
+			criteria.andIn("id",Arrays.asList(ids));
+			// 根据条件删除
 			brandMapper.deleteByExample(example);
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
@@ -89,17 +91,18 @@ public class BrandServiceImpl implements BrandService {
 		}
 	}
 
+
 	/** 多条件分页查询 */
-	public List<Brand> findByPage(Brand brand, int page, int rows){
+	@Override
+	public PageResult findByPage(Brand brand, int page, int rows){
 		try {
-			PageInfo<Brand> pageInfo = PageHelper.startPage(page, rows)
-				.doSelectPageInfo(new ISelect() {
-					@Override
-					public void doSelect() {
-						brandMapper.selectAll();
-					}
-				});
-			return pageInfo.getList();
+			PageInfo<Brand> pageInfo=PageHelper.startPage(page,rows).doSelectPageInfo(new ISelect() {
+				@Override
+				public void doSelect() {
+					brandMapper.findAll(brand);
+				}
+			});
+			return new PageResult(pageInfo.getTotal(),pageInfo.getList());
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
 		}
