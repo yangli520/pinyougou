@@ -5,6 +5,8 @@ import pojo.PageResult;
 
 import java.util.List;
 import java.io.Serializable;
+import java.util.Map;
+
 /**
  * BrandService 服务接口
  * @date 2019-03-29 15:43:02
@@ -33,4 +35,6 @@ public interface BrandService {
 	/** 多条件分页查询 */
 	PageResult findByPage(Brand brand, int page, int rows);
 
+	/**查询所有的品牌*/
+    List<Map<String,Object>> findAllByIdAndName();
 }

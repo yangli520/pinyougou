@@ -1,5 +1,6 @@
 package com.pinyougou.sellergoods.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.pojo.TypeTemplate;
 import com.pinyougou.mapper.TypeTemplateMapper;
 import com.pinyougou.service.TypeTemplateService;
@@ -8,6 +9,8 @@ import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import pojo.PageResult;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -16,12 +19,15 @@ import java.util.Arrays;
  * @date 2019-03-29 15:43:02
  * @version 1.0
  */
+@Service(interfaceName = "com.pinyougou.service.TypeTemplateService")
+@Transactional
 public class TypeTemplateServiceImpl implements TypeTemplateService {
 
 	@Autowired
 	private TypeTemplateMapper typeTemplateMapper;
 
 	/** 添加方法 */
+	@Override
 	public void save(TypeTemplate typeTemplate){
 		try {
 			typeTemplateMapper.insertSelective(typeTemplate);
@@ -83,16 +89,16 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	}
 
 	/** 多条件分页查询 */
-	public List<TypeTemplate> findByPage(TypeTemplate typeTemplate, int page, int rows){
+	public PageResult findByPage(TypeTemplate typeTemplate, int page, int rows){
 		try {
 			PageInfo<TypeTemplate> pageInfo = PageHelper.startPage(page, rows)
 				.doSelectPageInfo(new ISelect() {
 					@Override
 					public void doSelect() {
-						typeTemplateMapper.selectAll();
+						typeTemplateMapper.findAll(typeTemplate);
 					}
 				});
-			return pageInfo.getList();
+			return new PageResult(pageInfo.getTotal(),pageInfo.getList());
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
 		}

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import pojo.PageResult;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/specification")
@@ -40,5 +42,11 @@ public class SpecificationController {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /*查询规格列表*/
+    @GetMapping("/findSpecList")
+    public List<Map<String,Object>> findSpecList(){
+        return specificationService.findAllByIdAndName();
     }
 }

@@ -14,6 +14,8 @@ import pojo.PageResult;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Map;
+
 /**
  * BrandServiceImpl 服务接口实现类
  * @date 2019-03-29 15:43:02
@@ -105,6 +107,16 @@ public class BrandServiceImpl implements BrandService {
 			return new PageResult(pageInfo.getTotal(),pageInfo.getList());
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public List<Map<String, Object>> findAllByIdAndName() {
+		try{
+		return brandMapper.findAllByIdAndName();
+
+		}catch(Exception e){
+			throw new RuntimeException();
 		}
 	}
 

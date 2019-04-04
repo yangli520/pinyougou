@@ -1,13 +1,18 @@
 package com.pinyougou.sellergoods.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.pojo.Seller;
 import com.pinyougou.mapper.SellerMapper;
 import com.pinyougou.service.SellerService;
+
+import java.util.Date;
 import java.util.List;
 import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import pojo.PageResult;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -16,21 +21,28 @@ import java.util.Arrays;
  * @date 2019-03-29 15:43:02
  * @version 1.0
  */
+@Service(interfaceName = "com.pinyougou.service.SellerService")
+@Transactional
 public class SellerServiceImpl implements SellerService {
 
 	@Autowired
 	private SellerMapper sellerMapper;
 
 	/** 添加方法 */
+	@Override
 	public void save(Seller seller){
 		try {
+			seller.setStatus("0");
+			seller.setCreateTime(new Date());
 			sellerMapper.insertSelective(seller);
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
 		}
 	}
 
+
 	/** 修改方法 */
+	@Override
 	public void update(Seller seller){
 		try {
 			sellerMapper.updateByPrimaryKeySelective(seller);
@@ -65,6 +77,7 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	/** 根据主键id查询 */
+	@Override
 	public Seller findOne(Serializable id){
 		try {
 			return sellerMapper.selectByPrimaryKey(id);
@@ -83,18 +96,31 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	/** 多条件分页查询 */
-	public List<Seller> findByPage(Seller seller, int page, int rows){
+	public PageResult findByPage(Seller seller, int page, int rows){
 		try {
 			PageInfo<Seller> pageInfo = PageHelper.startPage(page, rows)
 				.doSelectPageInfo(new ISelect() {
 					@Override
 					public void doSelect() {
-						sellerMapper.selectAll();
+						sellerMapper.findAll(seller);
 					}
 				});
-			return pageInfo.getList();
+			return new PageResult(pageInfo.getTotal(),pageInfo.getList());
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
+		}
+	}
+
+	/**修改商家状态*/
+	@Override
+	public void updateStatus(String sellerId, String status) {
+		try {
+			Seller seller=new Seller();
+			seller.setSellerId(sellerId);
+			seller.setStatus(status);
+			sellerMapper.updateByPrimaryKeySelective(seller);
+		} catch (Exception e) {
+			throw new RuntimeException();
 		}
 	}
 

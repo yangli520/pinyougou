@@ -16,6 +16,8 @@ import pojo.PageResult;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Map;
+
 /**
  * SpecificationServiceImpl 服务接口实现类
  * @date 2019-03-29 15:43:02
@@ -34,6 +36,7 @@ public class SpecificationServiceImpl implements SpecificationService {
 	@Override
 	public void save(Specification specification){
 		try {
+			//insertSelective 方法自动给你的specification添加了id
 			specificationMapper.insertSelective(specification);
 			specificationOptionMapper.save(specification);
 		}catch (Exception ex){
@@ -107,6 +110,15 @@ public class SpecificationServiceImpl implements SpecificationService {
 			return new PageResult(pageInfo.getTotal(),pageInfo.getList());
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public List<Map<String, Object>> findAllByIdAndName() {
+		try{
+			return specificationMapper.findAllByIdAndName();
+		}catch(Exception e){
+			throw new RuntimeException(e);
 		}
 	}
 

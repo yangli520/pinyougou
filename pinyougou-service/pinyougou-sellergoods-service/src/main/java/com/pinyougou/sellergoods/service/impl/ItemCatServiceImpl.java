@@ -1,5 +1,6 @@
 package com.pinyougou.sellergoods.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.pojo.ItemCat;
 import com.pinyougou.mapper.ItemCatMapper;
 import com.pinyougou.service.ItemCatService;
@@ -8,6 +9,7 @@ import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -16,6 +18,8 @@ import java.util.Arrays;
  * @date 2019-03-29 15:43:02
  * @version 1.0
  */
+@Service(interfaceName = "com.pinyougou.service.ItemCatService")
+@Transactional
 public class ItemCatServiceImpl implements ItemCatService {
 
 	@Autowired
@@ -95,6 +99,16 @@ public class ItemCatServiceImpl implements ItemCatService {
 			return pageInfo.getList();
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public List<ItemCat> findItemCatByParentId(Long parentId) {
+		try {
+			/*创建ItemCat封装查询条件*/
+			return itemCatMapper.findItemCatByParentId(parentId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 

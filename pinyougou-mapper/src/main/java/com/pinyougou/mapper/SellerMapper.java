@@ -1,8 +1,11 @@
 package com.pinyougou.mapper;
 
+import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
 import com.pinyougou.pojo.Seller;
+
+import java.util.List;
 
 /**
  * SellerMapper 数据访问接口
@@ -11,6 +14,6 @@ import com.pinyougou.pojo.Seller;
  */
 public interface SellerMapper extends Mapper<Seller>{
 
-
-
+    /**多条件分页查询*/
+    List<Seller> findAll(Seller seller);
 }

@@ -5,6 +5,8 @@ import pojo.PageResult;
 
 import java.util.List;
 import java.io.Serializable;
+import java.util.Map;
+
 /**
  * SpecificationService 服务接口
  * @date 2019-03-29 15:43:02
@@ -33,4 +35,6 @@ public interface SpecificationService {
 	/** 多条件分页查询 */
 	PageResult findByPage(Specification specification, int page, int rows);
 
+	/**查询全部规格(id,name)*/
+    List<Map<String,Object>> findAllByIdAndName();
 }
