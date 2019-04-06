@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/typeTemplate")
 public class TypeTemplateController {
@@ -17,4 +20,10 @@ public class TypeTemplateController {
     public TypeTemplate findOne(Long id){
         return typeTemplateService.findOne(id);
     }
+    /**根据模板id查询所有的规格与规格选项*/
+    @GetMapping("/findSpecByTemplateId")
+    public List<Map> findSpecByTemplateId(Long id){
+        return typeTemplateService.findSpecByTemplateId(id);
+    }
+
 }

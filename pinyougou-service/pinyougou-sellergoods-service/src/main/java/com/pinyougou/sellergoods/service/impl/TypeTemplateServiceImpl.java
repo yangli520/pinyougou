@@ -1,6 +1,9 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
+import com.pinyougou.mapper.SpecificationOptionMapper;
+import com.pinyougou.pojo.SpecificationOption;
 import com.pinyougou.pojo.TypeTemplate;
 import com.pinyougou.mapper.TypeTemplateMapper;
 import com.pinyougou.service.TypeTemplateService;
@@ -14,6 +17,10 @@ import pojo.PageResult;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Map;
+
+import static jdk.nashorn.internal.objects.NativeDebug.map;
+
 /**
  * TypeTemplateServiceImpl 服务接口实现类
  * @date 2019-03-29 15:43:02
@@ -25,6 +32,8 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 
 	@Autowired
 	private TypeTemplateMapper typeTemplateMapper;
+	@Autowired
+	private SpecificationOptionMapper specificationOptionMapper;
 
 	/** 添加方法 */
 	@Override
@@ -102,6 +111,29 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 			return new PageResult(pageInfo.getTotal(),pageInfo.getList());
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
+		}
+	}
+
+	/** 根据模版id查询所有的规格与规格选项 */
+	@Override
+	public List<Map> findSpecByTemplateId(Long id) {
+		try {
+			//根据主键id查询模板
+			TypeTemplate typeTemplate=findOne(id);
+			//选中模板中的所有规格转换成List<Map>格式
+			List<Map> specLists= JSON.parseArray(typeTemplate.getSpecIds(),Map.class);
+			//迭代模板中所有的规格
+			for (Map map : specLists) {
+                //常见查询条件对象
+                SpecificationOption so=new SpecificationOption();
+                so.setSpecId(Long.valueOf(map.get("id").toString()));
+                //通过规格id,查询规格选项数据
+                List<SpecificationOption> specOptions = specificationOptionMapper.select(so);
+                map.put("options",specOptions);
+            }
+			return specLists;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
