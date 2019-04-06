@@ -22,6 +22,7 @@ public class GoodsDesc implements Serializable{
 	@Column(name="sale_service")
     private String saleService;
 
+
     public Long getGoodsId() {
         return goodsId;
     }

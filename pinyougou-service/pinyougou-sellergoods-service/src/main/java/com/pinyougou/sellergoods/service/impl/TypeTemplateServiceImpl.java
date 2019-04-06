@@ -71,6 +71,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	}
 
 	/** 根据主键id查询 */
+	@Override
 	public TypeTemplate findOne(Serializable id){
 		try {
 			return typeTemplateMapper.selectByPrimaryKey(id);

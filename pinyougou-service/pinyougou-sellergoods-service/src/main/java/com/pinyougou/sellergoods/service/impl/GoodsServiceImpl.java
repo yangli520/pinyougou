@@ -1,5 +1,7 @@
 package com.pinyougou.sellergoods.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
+import com.pinyougou.mapper.GoodsDescMapper;
 import com.pinyougou.pojo.Goods;
 import com.pinyougou.mapper.GoodsMapper;
 import com.pinyougou.service.GoodsService;
@@ -8,6 +10,7 @@ import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -16,15 +19,25 @@ import java.util.Arrays;
  * @date 2019-03-29 15:43:02
  * @version 1.0
  */
+@Service(interfaceName = "com.pinyougou.service.GoodsService")
+@Transactional
 public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private GoodsMapper goodsMapper;
+	@Autowired
+	private GoodsDescMapper goodsDescMapper;
 
 	/** 添加方法 */
+	@Override
 	public void save(Goods goods){
 		try {
+			//设置为审核状态
+			goods.setAuditStatus("0");
 			goodsMapper.insertSelective(goods);
+			//为商品描述对象设置主键id
+			goods.getGoodsDesc().setGoodsId(goods.getId());
+			goodsDescMapper.insertSelective(goods.getGoodsDesc());
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
 		}
