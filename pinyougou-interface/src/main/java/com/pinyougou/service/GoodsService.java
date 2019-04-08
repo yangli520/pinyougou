@@ -33,4 +33,9 @@ public interface GoodsService {
 	/** 多条件分页查询 */
 	PageResult findByPage(Goods goods, int page, int rows);
 
+	/**修改商品的审核状态*/
+    void updateStatus(String columnName,Long[] ids, String status);
+
+/*    *//**商家上下架商品*//*
+    void updateMarketable(Long[] ids, String status);*/
 }

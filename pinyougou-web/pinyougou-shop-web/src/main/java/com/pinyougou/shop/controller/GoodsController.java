@@ -45,4 +45,16 @@ public class GoodsController {
         }
         return goodsService.findByPage(goods, page, rows);
     }
+
+    /**商家上下架商品*/
+    @GetMapping("/updateMarketable")
+    public boolean updateMarketable(String columnName,Long[] ids,String status){
+        try {
+            goodsService.updateStatus("is_marketable",ids,status);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -14,5 +14,18 @@
         <port>9101</port>
     </properties>
 
+    <dependencies>
+    <!-- fastdfs-client -->
+    <dependency>
+        <groupId>org.csource</groupId>
+        <artifactId>fastdfs-client</artifactId>
+    </dependency>
+    <!-- commons-fileupload -->
+    <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+    </dependency>
+    </dependencies>
+
 
 </project>

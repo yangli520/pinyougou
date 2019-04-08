@@ -70,28 +70,28 @@ public class GoodsServiceImpl implements GoodsService {
                         //拼接规格选项到SKU商品标题
                         title.append("" + value);
                     }
-					/** 设置SKU商品的标题 */
+					/*设置SKU商品的标题 */
 					item.setTitle(title.toString());
-					/** 设置SKU商品其它属性 */
+					/* 设置SKU商品其它属性 */
                     setItemInfo(item, goods);
                     itemMapper.insertSelective(item);
                 }
             }else{
-                /** 创建SKU具体商品对象 */
+                /*创建SKU具体商品对象 */
                 Item item = new Item();
-                /** 设置SKU商品的标题 */
+                /*设置SKU商品的标题 */
                 item.setTitle(goods.getGoodsName());
-                /** 设置SKU商品的价格 */
+                /* 设置SKU商品的价格 */
                 item.setPrice(goods.getPrice());
-                /** 设置SKU商品库存数据 */
+                /* 设置SKU商品库存数据 */
                 item.setNum(9999);
-                /** 设置SKU商品启用状态 */
+                /*设置SKU商品启用状态 */
                 item.setStatus("1");
-                /** 设置是否默认*/
+                /* 设置是否默认*/
                 item.setIsDefault("1");
-                /** 设置规格选项 */
+                /*设置规格选项 */
                 item.setSpec("{}");
-                /** 设置SKU商品其它属性 */
+                /* 设置SKU商品其它属性 */
                 setItemInfo(item, goods);
                 itemMapper.insertSelective(item);
             }
@@ -101,30 +101,30 @@ public class GoodsServiceImpl implements GoodsService {
 	}
     /** 设置SKU商品信息 */
     private void setItemInfo(Item item, Goods goods){
-        /** 设置SKU商品图片地址 */
+        /*设置SKU商品图片地址 */
         List<Map> imageList = JSON.parseArray(
                 goods.getGoodsDesc().getItemImages(), Map.class);
         if (imageList != null && imageList.size() > 0){
-            /** 取第一张图片 */
+            /*取第一张图片 */
             item.setImage((String)imageList.get(0).get("url"));
         }
-        /** 设置SKU商品的分类(三级分类) */
+        /* 设置SKU商品的分类(三级分类) */
         item.setCategoryid(goods.getCategory3Id());
-        /** 设置SKU商品的创建时间 */
+        /*设置SKU商品的创建时间 */
         item.setCreateTime(new Date());
-        /** 设置SKU商品的修改时间 */
+        /*设置SKU商品的修改时间 */
         item.setUpdateTime(item.getCreateTime());
-        /** 设置SPU商品的编号 */
+        /*设置SPU商品的编号 */
         item.setGoodsId(goods.getId());
-        /** 设置商家编号 */
+        /* 设置商家编号 */
         item.setSellerId(goods.getSellerId());
-        /** 设置分类名称 */
+        /*设置分类名称 */
         item.setCategory(itemCatMapper
                 .selectByPrimaryKey(goods.getCategory3Id()).getName());
-        /** 设置品牌名称 */
+        /*设置品牌名称 */
         item.setBrand(brandMapper
                 .selectByPrimaryKey(goods.getBrandId()).getName());
-        /** 设置商家店铺名称 */
+        /*设置商家店铺名称 */
         item.setSeller(sellerMapper.selectByPrimaryKey(
                 goods.getSellerId()).getNickName());
     }
@@ -148,21 +148,13 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 	}
 
+
+
 	/** 批量删除 */
 	public void deleteAll(Serializable[] ids){
-		try {
-			// 创建示范对象
-			Example example = new Example(Goods.class);
-			// 创建条件对象
-			Example.Criteria criteria = example.createCriteria();
-			// 创建In条件
-			criteria.andIn("id", Arrays.asList(ids));
-			// 根据示范对象删除
-			goodsMapper.deleteByExample(example);
-		}catch (Exception ex){
-			throw new RuntimeException(ex);
-		}
 	}
+
+
 
 	/** 根据主键id查询 */
 	public Goods findOne(Serializable id){
@@ -209,5 +201,25 @@ public class GoodsServiceImpl implements GoodsService {
 			throw new RuntimeException(ex);
 		}
 	}
+
+	/**批量修改状态*/
+	@Override
+	public void updateStatus(String columnName,Long[] ids, String status) {
+		try {
+			goodsMapper.updateStatus(columnName,ids,status);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+/*	*//**商家上下架商品*//*
+	@Override
+	public void updateMarketable(Long[] ids, String status) {
+		try {
+			goodsMapper.updateMarketable(ids,status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}*/
 
 }

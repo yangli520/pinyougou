@@ -211,5 +211,22 @@ app.controller('goodsController', function($scope, $controller, baseService){
         return newItems;
     };
 
+    /**商家商品上下价(修改可销售状态)*/
+    $scope.updateMarketable=function (status) {
+        if($scope.ids.length>0){
+            baseService.sendGet("/goods/updateMarketable","ids="+$scope.ids+"&status="+status)
+                .then(function (response) {
+                    if(response.data){
+                        $scope.reload();
+                        $scope.ids=[];
+                    }else{
+                        alert("操作失败");
+                    }
+                });
+        }else{
+                alert("请选择你要操作的商品!");
+        }
+    }
+
 
 });
